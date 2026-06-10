@@ -1,0 +1,23 @@
+# render.yaml — Render deployment configuration
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: agora-backend
+    runtime: node
+    plan: free                      # Change to 'starter' for production
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+
+    envVars:
+      - key: PORT
+        value: 3000
+
+      - key: FIREBASE_DATABASE_URL
+        value: https://agoraa-47d91-default-rtdb.firebaseio.com
+
+      # Paste your full serviceAccountKey.json content here
+      # OR set this in Render Dashboard → Environment → Add Secret
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false                 # marks it as a secret — set manually in dashboard

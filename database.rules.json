@@ -1,0 +1,37 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      "$userId": {
+        "fcmToken": {
+          // Only backend service account can read FCM tokens
+          ".read" : false,
+          ".write": "auth != null && auth.uid === $userId"
+        }
+      }
+    },
+
+    "call_requests": {
+      "$channelId": {
+        // Backend service account can read/write call requests
+        ".read" : "auth != null",
+        ".write": "auth != null",
+
+        // Validate the shape of a call_request document
+        ".validate": "newData.hasChildren(['callerId', 'receiverId', 'callType', 'status', 'createdAt'])",
+
+        "callerId"  : { ".validate": "newData.isString()" },
+        "receiverId": { ".validate": "newData.isString()" },
+        "callType"  : { ".validate": "newData.isString() && (newData.val() === 'VIDEO' || newData.val() === 'AUDIO')" },
+        "status"    : { ".validate": "newData.isString() && (newData.val() === 'ringing' || newData.val() === 'accepted' || newData.val() === 'rejected' || newData.val() === 'ended')" },
+        "createdAt" : { ".validate": "newData.isNumber()" },
+        "updatedAt" : { ".validate": "newData.isNumber()" },
+
+        // Disallow extra fields
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}
