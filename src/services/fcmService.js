@@ -68,8 +68,8 @@ async function sendFCMMessage(fcmToken, data) {
  */
 async function writeCallRequest({ channelId, callerId, receiverId, callType, status = 'ringing' }) {
   await db.ref(`call_requests/${channelId}`).set({
-    callerId  : String(callerId),
-    receiverId: String(receiverId),
+    callerId  : Number(callerId),
+    receiverId: Number(receiverId),
     callType  : String(callType).toUpperCase(),
     status,
     createdAt : Date.now(),
